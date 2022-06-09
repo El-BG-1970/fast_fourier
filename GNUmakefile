@@ -1,7 +1,7 @@
 CFLAGS=-Wall -Wextra -Werror
 BLDFLAGS=-O2
 DBGFLAGS=-g
-LIBS=#-lphread -latomic
+LIBS= #-lpthread #-latomic
 CC=clang++
 
 ODIR=./build

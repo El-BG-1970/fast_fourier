@@ -1,9 +1,18 @@
 #include <iostream>
 #include <threadpool.hpp>
 
+void increment(int *i) { *i += 1; }
+
 int main(int argc, char **argv) {
 	 SimplePool threadpool(2);
+
+	 int onetwo[2];
+	 onetwo[0] = onetwo[1] = 0;
 	 
-	 std::cout << "hello world" << std::endl;
+	 threadpool.push(increment, onetwo);
+	 threadpool.push(increment, onetwo+1);
+	 threadpool.stop();
+
+	 std::cout << onetwo[0] << ' ' << onetwo[1] << std::endl;
 	 return 0;
 }
