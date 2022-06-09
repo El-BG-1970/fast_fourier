@@ -1,6 +1,9 @@
 #include <iostream>
+#include <threadpool.hpp>
 
 int main(int argc, char **argv) {
-    std::cout << "hello world" << std::endl;
-    return 0;
+	 SimplePool threadpool(2);
+	 
+	 std::cout << "hello world" << std::endl;
+	 return 0;
 }

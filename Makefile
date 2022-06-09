@@ -11,24 +11,24 @@ SRC=./src
 TARGET=fft
 HEAD=
 
-_DEPS=
+_DEPS=threadpool.cpp
 DEPS=$(patsubst %,$(SRC)/%,$(_DEPS))
-OBJ=$(patsubst %,$(ODIR)/%,${_DEPS:.c=.o})
+OBJ=$(patsubst %,$(ODIR)/%,${_DEPS:.cpp=.o})
+HEAD=$(patsubst %,$(IDIR)/%,${_DEPS:.cpp=.h})
 
 .PHONY: all clean dbg $(TARGET)
 
-all: $(TARGET)
+all: $(TARGET) $(OBJ)
 
-$(OBJ): $(HEAD)
 
-$(ODIR)/%.o: $(SRC)/%.c $(DEPS)
-	$(CC) -o $@ -c $< $(CFLAGS)
+$(ODIR)/%.o: $(SRC)/%.cpp $(DEPS)
+	$(CC) -o $@ -c $< $(CFLAGS) -I $(IDIR)
 
 $(TARGET): $(OBJ)
-	$(CC) -o $@ main.cpp $(OBJ) $(LIBS) $(BLDFLAGS)
+	$(CC) -o $@ main.cpp $(OBJ) $(LIBS) $(BLDFLAGS) -I $(IDIR)
 
 dbg: $(OBJ)
-	$(CC) -o $(TARGET) main.cpp $(OBJ) $(LIBS) $(BLDFLAGS) $(DBGFLAGS)
+	$(CC) -o $(TARGET) main.cpp $(OBJ) $(LIBS) $(BLDFLAGS) $(DBGFLAGS) -I $(IDIR)
 
 clean:
 	rm -f $(ODIR)/*.o *~ *.core $(OBJ) $(TARGET)
