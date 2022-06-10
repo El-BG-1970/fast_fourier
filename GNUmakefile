@@ -2,8 +2,8 @@ CFLAGS=-Wall -Wextra -Werror
 BLDFLAGS=-O2
 DBGFLAGS=-g
 LIBS= -lpthread #-latomic
-#CC=clang++ --std=gnu++17 -v
-CC=eg++
+CC=clang++ --std=gnu++17
+#CC=eg++
 
 ODIR=./build
 IDIR=./include
