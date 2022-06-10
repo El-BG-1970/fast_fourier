@@ -12,7 +12,7 @@ SRC=./src
 TARGET=fft
 HEAD=
 
-_DEPS= main.cpp
+_DEPS= main.cpp fft.cpp
 DEPS=$(patsubst %,$(SRC)/%,$(_DEPS))
 OBJ=$(patsubst %,$(ODIR)/%,${_DEPS:.cpp=.o})
 HEAD=$(patsubst %,$(IDIR)/%,${_DEPS:.cpp=.hpp})
