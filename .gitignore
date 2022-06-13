@@ -34,3 +34,5 @@ fft
 *.exe
 *.out
 *.app
+
+.vscode/
