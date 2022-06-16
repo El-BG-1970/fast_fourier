@@ -73,12 +73,12 @@ void inv_radix2fft(ComVector &P, size_t n, size_t num_threads, ComVector &res) {
 	inv_radix2fft(V, half_n, half_threads2, Vt);
 	
 	std::complex<double> coeff(0, (-2.)*M_PI/n_d);
-	std::complex<double> omega_1 = std::pow(M_E, coeff)/n_d;
+	std::complex<double> omega_1 = std::pow(M_E, coeff);
 	std::complex<double> omega = 1.;
 
 	for (size_t j = 0; j < half_n; j++) {
-		res[j] = Ut[j] + omega*Vt[j];
-		res[j+half_n] = Ut[j] - omega*Vt[j];
+		res[j] = (Ut[j] + omega*Vt[j])/std::complex<double>(2);
+		res[j+half_n] = (Ut[j] - omega*Vt[j])/std::complex<double>(2);
 		omega *= omega_1;
 	}
 }

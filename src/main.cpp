@@ -6,19 +6,19 @@ void increment(int *i) { *i += 1; }
 
 int main() {
 	int i;
-	// double p1[7] = {1, 1, 4, 5, 6, 7, 8};
-	// double p2[8] = {1, -1, 6, -7, 2, 1, 0, -9};
-	// std::vector<double> p3 = fft_poly_mult(p1, 3, p2, 3, 1);
+	double p1[7] = {1, 1, 4, 5, 6, 7, 8};
+	double p2[8] = {1, -1, 6, -7, 2, 1, 0, -9};
+	std::vector<double> p3 = fft_poly_mult(p1, 7, p2, 8, 1);
 
-	// auto begin = p3.begin();
-	// auto end = p3.end();
-	// i = 0;
-	// while (begin != end) {
-	// 	std::cout << *begin << "x^" << i << " + ";
-	// 	i++;
-	// 	begin++;
-	// }
-	// std::cout << std::endl;
+	auto begin = p3.begin();
+	auto end = p3.end();
+	i = 0;
+	while (begin != end) {
+		std::cout << *begin << "x^" << i << " + ";
+		i++;
+		begin++;
+	}
+	std::cout << std::endl;
 
 	double p4[4] = {5,3,2,1};
 	std::vector<double> p4v(4);
