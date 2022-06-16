@@ -1,25 +1,26 @@
 #include <iostream>
 #include "threadpool.hpp"
 #include "fft.hpp"
+#define testPolyMult
 
 void increment(int *i) { *i += 1; }
 
 int main() {
-	int i;
+#ifdef testPolyMult
+	size_t i;
 	double p1[7] = {1, 1, 4, 5, 6, 7, 8};
 	double p2[8] = {1, -1, 6, -7, 2, 1, 0, -9};
 	std::vector<double> p3 = fft_poly_mult(p1, 7, p2, 8, 7);
 
-	auto begin = p3.begin();
-	auto end = p3.end();
 	i = 0;
-	while (begin != end) {
-		std::cout << *begin << "x^" << i << " + ";
+	while (i < p3.size()-1) {
+		std::cout << p3[i] << "x^" << i << " + ";
 		i++;
-		begin++;
 	}
-	std::cout << std::endl;
+	std::cout << p3[i] << "x^" << i << std::endl;
+#endif
 
+#ifdef testFFT
 	double p4[4] = {5,3,2,1};
 	std::vector<double> p4v(4);
 	std::vector<std::complex<double>> p5(4);
@@ -47,6 +48,7 @@ int main() {
 		i++;
 		begin_3++;
 	}
+#endif
 
 	return 0;
 }
