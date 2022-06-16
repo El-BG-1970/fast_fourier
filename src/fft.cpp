@@ -27,7 +27,7 @@ void radix2fft(std::vector<double> &P, size_t n, size_t num_threads, ComVector &
 	ComVector Ut(half_n, 0);
 	ComVector Vt(half_n, 0);
 	// Make one thread run radix2fft and do the other yourself
-	if (num_threads == 2) {
+	if (num_threads >= 2) {
 		std::thread worker(&radix2fft, std::ref(U), half_n, half_threads1, std::ref(Ut));
 		radix2fft(V, half_n, half_threads2, std::ref(Vt));
 		worker.join();
@@ -69,16 +69,24 @@ void inv_radix2fft(ComVector &P, size_t n, size_t num_threads, ComVector &res) {
 
 	ComVector Ut(half_n, 0);
 	ComVector Vt(half_n, 0);
-	inv_radix2fft(U, half_n, half_threads1, Ut);
-	inv_radix2fft(V, half_n, half_threads2, Vt);
+	if (num_threads >= 2) {
+		std::cout << "Spawn thread" << std::endl;
+		std::thread worker(&inv_radix2fft, std::ref(U), half_n, half_threads1, std::ref(Ut));
+		inv_radix2fft(V, half_n, half_threads2, std::ref(Vt));
+		worker.join();
+	}
+	else {
+		inv_radix2fft(U, half_n, half_threads1, Ut);
+		inv_radix2fft(V, half_n, half_threads2, Vt);
+	}
 	
 	std::complex<double> coeff(0, (-2.)*M_PI/n_d);
 	std::complex<double> omega_1 = std::pow(M_E, coeff);
 	std::complex<double> omega = 1.;
 
 	for (size_t j = 0; j < half_n; j++) {
-		res[j] = (Ut[j] + omega*Vt[j])/std::complex<double>(2);
-		res[j+half_n] = (Ut[j] - omega*Vt[j])/std::complex<double>(2);
+		res[j] = (Ut[j] + omega*Vt[j])/2.;
+		res[j+half_n] = (Ut[j] - omega*Vt[j])/2.;
 		omega *= omega_1;
 	}
 }
@@ -109,12 +117,9 @@ std::vector<double> fft_poly_mult(double *p1, size_t n1, double *p2, size_t n2, 
 	inv_radix2fft(tmp, total, num_threads, std::ref(ret_c));
 	std::vector<double> ret(total, 0);
 	auto begin = ret_c.begin();
-	auto end = ret_c.end();
-	int i = 0;
-	while (begin != end) {
+	for (size_t i =0; i < sum; i++) {
 		ret[i] = begin->real();
 		begin++;
-		i++;
 	}
 	return ret;
 }

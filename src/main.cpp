@@ -8,7 +8,7 @@ int main() {
 	int i;
 	double p1[7] = {1, 1, 4, 5, 6, 7, 8};
 	double p2[8] = {1, -1, 6, -7, 2, 1, 0, -9};
-	std::vector<double> p3 = fft_poly_mult(p1, 7, p2, 8, 1);
+	std::vector<double> p3 = fft_poly_mult(p1, 7, p2, 8, 7);
 
 	auto begin = p3.begin();
 	auto end = p3.end();
