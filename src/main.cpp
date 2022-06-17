@@ -1,7 +1,8 @@
 #include <iostream>
 #include "threadpool.hpp"
 #include "fft.hpp"
-#define testPolyMult
+#include "csv_utils.hpp"
+#define testFFSampling
 
 void increment(int *i) { *i += 1; }
 
@@ -48,6 +49,18 @@ int main() {
 		i++;
 		begin_3++;
 	}
+#endif
+
+#ifdef testFFSampling
+    std::vector<double> *data = read_data("./data/date_v_temp.csv");
+    std::vector<std::complex<double>> samples(data->size(), 0.);
+    radix2fft(std::ref(*data), data->size(), 2, std::ref(samples));
+
+    // here we need to zero all the coefficients we don't need
+    
+    // here we need to do the reverse fft in order to obtain the compressed data
+    
+    // finally, we need to write a csv with the original data and the compressed data, for comparison
 #endif
 
 	return 0;
