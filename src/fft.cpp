@@ -1,6 +1,5 @@
 #include <fft.hpp>
-
-typedef std::vector<std::complex<double>> ComVector;
+#include <algorithm>
 
 using namespace std::complex_literals;
 void radix2fft(std::vector<double> &P, size_t n, size_t num_threads, ComVector &res) {
@@ -123,3 +122,24 @@ std::vector<double> fft_poly_mult(double *p1, size_t n1, double *p2, size_t n2, 
 	}
 	return ret;
 }
+
+void trim_less_than(ComVector &P, double cutoff) {
+    for (size_t i = 0; i < P.size(); i++) {
+        if (std::norm(P[i]) < cutoff)
+            P[i] = 0;
+    }
+}
+
+//void trim_n_perc_of_max(ComVector &P, double perc) {
+    //auto it = std::max_element(P.begin(), P.end(),
+            //[](std::complex<double> a, std::complex<double> b){
+            //return std::norm(a) < std::norm(b);
+            //});
+    //std::complex<double> max = *it;
+    //double cutoff = perc*std::norm(max)/100.0;
+//
+    //for (size_t i = 0; i < P.size(); i++) {
+        //if (std::norm(P[i]) < cutoff)
+            //P[i] = 0;
+    //}
+//}
