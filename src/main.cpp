@@ -73,6 +73,17 @@ int main() {
     
     // finally, we need to write a csv with the original data and the compressed data, for comparison
     write_data("./data/date_v_temp_FFT.csv", std::ref(ret_c_double), ds);
+
+    double perf = 0;
+    for (size_t i = 0; i < ds; i++) perf += std::abs((*data)[i] - ret_c_double[i]);
+    perf /= ds;
+    std::cout << "absolute error: " << perf << std::endl;
+
+    double rel_perf = 0;
+    for (size_t i = 0; i < ds; i++) rel_perf += std::abs(((*data)[i]-ret_c_double[i])/(*data)[i]);
+    rel_perf /= ds;
+    std::cout << "relative error: " << 100.0*rel_perf << "%" << std::endl;
+
 #endif
 
 	return 0;

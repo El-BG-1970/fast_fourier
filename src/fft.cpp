@@ -69,7 +69,6 @@ void inv_radix2fft(ComVector &P, size_t n, size_t num_threads, ComVector &res) {
 	ComVector Ut(half_n, 0);
 	ComVector Vt(half_n, 0);
 	if (num_threads >= 2) {
-		std::cout << "Spawn thread" << std::endl;
 		std::thread worker(&inv_radix2fft, std::ref(U), half_n, half_threads1, std::ref(Ut));
 		inv_radix2fft(V, half_n, half_threads2, std::ref(Vt));
 		worker.join();
@@ -130,8 +129,6 @@ void trim_less_than(ComVector &P, double cutoff) {
             return std::norm(a) < std::norm(b);
             });
     size_t pos = (size_t)(cutoff*P.size());
-    std::cout << pos << std::endl;
-    std::cout << PP[0] << " " << PP[pos] << " " << PP[P.size()-1] << std::endl;
     auto nth = PP[pos];
     for (size_t i = 0; i < P.size(); i++) {
         if (std::norm(P[i]) < std::norm(nth))
