@@ -53,27 +53,30 @@ int main() {
 
 #ifdef testFFSampling
     std::vector<double> *data = read_data("./data/date_v_temp.csv");
-    std::vector<std::complex<double>> samples(data->size(), 0.);
-    radix2fft(std::ref(*data), data->size(), 2, std::ref(samples));
-	for (size_t i = 0; i < 10; i++) {
-		std::cout << samples[i] << std::endl;
-	}
+    size_t ds = data->size();
+    size_t sz = 1;
+    while (sz < ds) sz = sz << 1;
+
+    for (size_t i = ds; i < sz; i++) data->push_back(0.);
+    std::vector<std::complex<double>> samples(sz);
+    radix2fft(std::ref(*data), sz, 2, std::ref(samples));
 
     // here we need to zero all the coefficients we don't need
     //trim_n_perc_of_max(std::ref(samples), 10.0);
     //for (size_t i = 0; i < samples.size(); i++) {
         //if (std::norm(samples[i]) < 10) samples[i] = 0;
     //}
-    trim_less_than(std::ref(samples), 10);
+    // trim_signal(std::ref(samples), 0, samples.size());
     
     // here we need to do the reverse fft in order to obtain the compressed data
-    std::vector<std::complex<double>> ret_c(samples.size(), 0.);
-    inv_radix2fft(std::ref(samples), samples.size(), 2, std::ref(ret_c));
-    std::vector<double> ret_c_double(samples.size(), 0.);
-    for (size_t i = 0; i < samples.size(); ret_c_double[i] = std::real(ret_c[i++]));
+    std::vector<std::complex<double>> ret_c(sz, 0.);
+    inv_radix2fft(std::ref(samples), sz, 2, std::ref(ret_c));
+    std::vector<double> ret_c_double(sz, 0.);
+    for (size_t i = 0; i < sz; i++)
+        ret_c_double[i] = std::real(ret_c[i]);
     
     // finally, we need to write a csv with the original data and the compressed data, for comparison
-    write_data("./data/date_v_temp_FFT.csv", std::ref(ret_c));
+    write_data("./data/date_v_temp_FFT.csv", std::ref(ret_c_double));
 #endif
 
 	return 0;

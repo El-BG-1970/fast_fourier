@@ -130,6 +130,23 @@ void trim_less_than(ComVector &P, double cutoff) {
     }
 }
 
+
+size_t dist(size_t a, size_t b) {
+    return std::sqrt(std::pow(a,2) - std::pow(b,2));
+}
+
+void trim_signal(ComVector &P, size_t low, size_t high) {
+    size_t mid = P.size()/2;
+    for (size_t i = 0; i < low; i++) {
+        if (dist(i,mid) < low)
+            P[i] = 0;
+    }
+    for (size_t i = high; i < P.size(); i++) {
+        if (dist(i,mid) > high)
+            P[i] = 0;
+    }
+}
+
 //void trim_n_perc_of_max(ComVector &P, double perc) {
     //auto it = std::max_element(P.begin(), P.end(),
             //[](std::complex<double> a, std::complex<double> b){

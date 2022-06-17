@@ -14,7 +14,7 @@ std::vector<double> *read_data(const char* filename) {
     return temps;
 }
 
-void write_data(const char* filename, std::vector<std::complex<double>> &data) {
+void write_data(const char* filename, std::vector<double> &data) {
     std::ofstream f;
     f.open(filename);
 

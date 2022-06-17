@@ -1,6 +1,5 @@
 CFLAGS=-Wall -Wextra -Werror
 BLDFLAGS=-O2
-DBGFLAGS=-g
 LIBS= -lpthread #-latomic
 CC=clang++ --std=gnu++17
 #CC=eg++
@@ -17,19 +16,16 @@ DEPS=$(patsubst %,$(SRC)/%,$(_DEPS))
 OBJ=$(patsubst %,$(ODIR)/%,${_DEPS:.cpp=.o})
 HEAD=$(patsubst %,$(IDIR)/%,${_DEPS:.cpp=.hpp})
 
-.PHONY: all clean dbg $(TARGET)
+.PHONY: all clean $(TARGET)
 
 all: $(TARGET) $(OBJ)
 
 
 $(ODIR)/%.o: $(SRC)/%.cpp
-	$(CC) -o $@ -c $< $(CFLAGS) -I $(IDIR)
+	$(CC) -o $@ -c $< $(CFLAGS) -I $(IDIR) -g 
 
 $(TARGET): $(OBJ)
-	$(CC) -o $@ $(OBJ) $(LIBS) $(BLDFLAGS) -I $(IDIR)
-
-dbg: $(OBJ)
-	$(CC) -o $(TARGET) $(OBJ) $(LIBS) $(BLDFLAGS) $(DBGFLAGS) -I $(IDIR)
+	$(CC) -o $@ $(OBJ) $(LIBS) $(BLDFLAGS) -I $(IDIR) -g
 
 clean:
 	rm -f $(ODIR)/*.o *~ *.core $(OBJ) $(TARGET)
