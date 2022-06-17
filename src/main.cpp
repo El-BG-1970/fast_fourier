@@ -66,17 +66,18 @@ int main() {
     //for (size_t i = 0; i < samples.size(); i++) {
         //if (std::norm(samples[i]) < 10) samples[i] = 0;
     //}
-    // trim_signal(std::ref(samples), 0, samples.size());
+    //trim_signal(std::ref(samples), 0, 100);
+    trim_less_than(std::ref(samples), 100);
     
     // here we need to do the reverse fft in order to obtain the compressed data
     std::vector<std::complex<double>> ret_c(sz, 0.);
     inv_radix2fft(std::ref(samples), sz, 2, std::ref(ret_c));
     std::vector<double> ret_c_double(sz, 0.);
-    for (size_t i = 0; i < sz; i++)
+    for (size_t i = 0; i < ds; i++)
         ret_c_double[i] = std::real(ret_c[i]);
     
     // finally, we need to write a csv with the original data and the compressed data, for comparison
-    write_data("./data/date_v_temp_FFT.csv", std::ref(ret_c_double));
+    write_data("./data/date_v_temp_FFT.csv", std::ref(ret_c_double), ds);
 #endif
 
 	return 0;

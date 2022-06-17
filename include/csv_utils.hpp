@@ -14,13 +14,13 @@ std::vector<double> *read_data(const char* filename) {
     return temps;
 }
 
-void write_data(const char* filename, std::vector<double> &data) {
+void write_data(const char* filename, std::vector<double> &data, size_t n) {
     std::ofstream f;
     f.open(filename);
 
     f << "x,y" << std::endl;
-    for (size_t i = 0; i < data.size(); i++) {
-        f << i << "," << data[i] << std::endl;
+    for (size_t i = 0; i < n; i++) {
+        f << i+1 << "," << data[i] << std::endl;
     }
     f.close();
 }
