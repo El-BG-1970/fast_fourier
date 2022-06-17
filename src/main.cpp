@@ -61,12 +61,7 @@ int main() {
     std::vector<std::complex<double>> samples(sz);
     radix2fft(std::ref(*data), sz, 2, std::ref(samples));
 
-    // here we need to zero all the coefficients we don't need
-    //trim_n_perc_of_max(std::ref(samples), 10.0);
-    //for (size_t i = 0; i < samples.size(); i++) {
-        //if (std::norm(samples[i]) < 10) samples[i] = 0;
-    //}
-    //trim_signal(std::ref(samples), 0, sz-10);
+    // here we let go of some coefficients (second parameter is percent)
     trim_less_than(std::ref(samples), 0.9);
     
     // here we need to do the reverse fft in order to obtain the compressed data
@@ -78,6 +73,17 @@ int main() {
     
     // finally, we need to write a csv with the original data and the compressed data, for comparison
     write_data("./data/date_v_temp_FFT.csv", std::ref(ret_c_double), ds);
+
+    double perf = 0;
+    for (size_t i = 0; i < ds; i++) perf += std::abs((*data)[i] - ret_c_double[i]);
+    perf /= ds;
+    std::cout << "absolute error: " << perf << std::endl;
+
+    double rel_perf = 0;
+    for (size_t i = 0; i < ds; i++) rel_perf += std::abs(((*data)[i]-ret_c_double[i])/(*data)[i]);
+    rel_perf /= ds;
+    std::cout << "relative error: " << 100.0*rel_perf << "%" << std::endl;
+
 #endif
 
 	return 0;

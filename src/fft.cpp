@@ -69,7 +69,6 @@ void inv_radix2fft(ComVector &P, size_t n, size_t num_threads, ComVector &res) {
 	ComVector Ut(half_n, 0);
 	ComVector Vt(half_n, 0);
 	if (num_threads >= 2) {
-		std::cout << "Spawn thread" << std::endl;
 		std::thread worker(&inv_radix2fft, std::ref(U), half_n, half_threads1, std::ref(Ut));
 		inv_radix2fft(V, half_n, half_threads2, std::ref(Vt));
 		worker.join();
@@ -130,53 +129,9 @@ void trim_less_than(ComVector &P, double cutoff) {
             return std::norm(a) < std::norm(b);
             });
     size_t pos = (size_t)(cutoff*P.size());
-    std::cout << pos << std::endl;
-    std::cout << PP[0] << " " << PP[pos] << " " << PP[P.size()-1] << std::endl;
     auto nth = PP[pos];
     for (size_t i = 0; i < P.size(); i++) {
         if (std::norm(P[i]) < std::norm(nth))
             P[i] = 0;
     }
 }
-
-void trim_FFT(ComVector &P, double cutoff) {
-    size_t ps = P.size();
-    std::complex<double> mean = 0.;
-    for (size_t i = 0; i < ps; mean += P[i++]);
-    mean = mean / (1.0 * ps);
-    std::cout << mean << std::endl;
-    for (size_t i = 0; i < ps; i++) {
-        if (std::norm(P[i]-mean) > cutoff)
-            P[i] = 0;
-    }
-}
-
-size_t dist(size_t a, size_t b) {
-    return std::sqrt(std::pow(a,2) - std::pow(b,2));
-}
-
-void trim_signal(ComVector &P, size_t low, size_t high) {
-    size_t mid = P.size()/2;
-    for (size_t i = 0; i < low; i++) {
-        if (dist(i,mid) < low)
-            P[i] = 0;
-    }
-    for (size_t i = high; i < P.size(); i++) {
-        if (dist(i,mid) > high)
-            P[i] = 0;
-    }
-}
-
-//void trim_n_perc_of_max(ComVector &P, double perc) {
-    //auto it = std::max_element(P.begin(), P.end(),
-            //[](std::complex<double> a, std::complex<double> b){
-            //return std::norm(a) < std::norm(b);
-            //});
-    //std::complex<double> max = *it;
-    //double cutoff = perc*std::norm(max)/100.0;
-//
-    //for (size_t i = 0; i < P.size(); i++) {
-        //if (std::norm(P[i]) < cutoff)
-            //P[i] = 0;
-    //}
-//}
