@@ -1,7 +1,7 @@
 #pragma once
 #include <iostream>
 #include <fstream>
-#include <csv/csv.h>
+#include <csv.h>
 
 std::vector<double> *read_data(const char* filename) {
     auto temps = new std::vector<double>;
