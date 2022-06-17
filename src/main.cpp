@@ -61,12 +61,7 @@ int main() {
     std::vector<std::complex<double>> samples(sz);
     radix2fft(std::ref(*data), sz, 2, std::ref(samples));
 
-    // here we need to zero all the coefficients we don't need
-    //trim_n_perc_of_max(std::ref(samples), 10.0);
-    //for (size_t i = 0; i < samples.size(); i++) {
-        //if (std::norm(samples[i]) < 10) samples[i] = 0;
-    //}
-    //trim_signal(std::ref(samples), 0, sz-10);
+    // here we let go of some coefficients (second parameter is percent)
     trim_less_than(std::ref(samples), 0.9);
     
     // here we need to do the reverse fft in order to obtain the compressed data
