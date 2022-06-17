@@ -36,3 +36,4 @@ fft
 *.app
 
 .vscode/
+*.pdf
