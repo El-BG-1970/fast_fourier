@@ -17,6 +17,8 @@ std::vector<double> fft_poly_mult(double *p1, size_t n1, double *p2, size_t n2, 
 
 void trim_less_than(ComVector &P, double cutoff);
 
+void trim_FFT(ComVector &P, double cutoff);
+
 void trim_signal(ComVector &P, size_t low, size_t high);
 
 //void trim_n_perc_of_max(ComVector &P, double perc);

@@ -66,8 +66,8 @@ int main() {
     //for (size_t i = 0; i < samples.size(); i++) {
         //if (std::norm(samples[i]) < 10) samples[i] = 0;
     //}
-    //trim_signal(std::ref(samples), 0, 100);
-    trim_less_than(std::ref(samples), 100);
+    //trim_signal(std::ref(samples), 0, sz-10);
+    trim_less_than(std::ref(samples), 0.9);
     
     // here we need to do the reverse fft in order to obtain the compressed data
     std::vector<std::complex<double>> ret_c(sz, 0.);

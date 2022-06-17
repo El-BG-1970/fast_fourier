@@ -124,12 +124,32 @@ std::vector<double> fft_poly_mult(double *p1, size_t n1, double *p2, size_t n2, 
 }
 
 void trim_less_than(ComVector &P, double cutoff) {
+    ComVector PP = ComVector(P);
+    std::sort(PP.begin(), PP.end(),
+            [](std::complex<double> a, std::complex<double> b){
+            return std::norm(a) < std::norm(b);
+            });
+    size_t pos = (size_t)(cutoff*P.size());
+    std::cout << pos << std::endl;
+    std::cout << PP[0] << " " << PP[pos] << " " << PP[P.size()-1] << std::endl;
+    auto nth = PP[pos];
     for (size_t i = 0; i < P.size(); i++) {
-        if (std::norm(P[i]) < cutoff)
+        if (std::norm(P[i]) < std::norm(nth))
             P[i] = 0;
     }
 }
 
+void trim_FFT(ComVector &P, double cutoff) {
+    size_t ps = P.size();
+    std::complex<double> mean = 0.;
+    for (size_t i = 0; i < ps; mean += P[i++]);
+    mean = mean / (1.0 * ps);
+    std::cout << mean << std::endl;
+    for (size_t i = 0; i < ps; i++) {
+        if (std::norm(P[i]-mean) > cutoff)
+            P[i] = 0;
+    }
+}
 
 size_t dist(size_t a, size_t b) {
     return std::sqrt(std::pow(a,2) - std::pow(b,2));
