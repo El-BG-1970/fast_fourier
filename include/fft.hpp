@@ -13,7 +13,7 @@ void radix2fft(std::vector<double> &P, size_t n, size_t num_threads, ComVector &
 
 void inv_radix2fft(ComVector &P, size_t n, size_t num_threads, ComVector &res);
 
-std::vector<double> fft_poly_mult(double *p1, size_t n1, double *p2, size_t n2, size_t num_threads);
+std::vector<double> fft_poly_mult(std::vector<double> &p1, std::vector<double> &p2, size_t num_threads);
 
 void trim_less_than(ComVector &P, double cutoff);
 

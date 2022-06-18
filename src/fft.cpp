@@ -32,8 +32,8 @@ void radix2fft(std::vector<double> &P, size_t n, size_t num_threads, ComVector &
 		worker.join();
 	}
 	else {
-		radix2fft(U, half_n, half_threads1, std::ref(Ut));
-		radix2fft(V, half_n, half_threads2, std::ref(Vt));
+		radix2fft(U, half_n, 1, std::ref(Ut));
+		radix2fft(V, half_n, 1, std::ref(Vt));
 	}
 	
 	std::complex<double> coeff(0, M_PI*2/double(n));
@@ -74,8 +74,8 @@ void inv_radix2fft(ComVector &P, size_t n, size_t num_threads, ComVector &res) {
 		worker.join();
 	}
 	else {
-		inv_radix2fft(U, half_n, half_threads1, Ut);
-		inv_radix2fft(V, half_n, half_threads2, Vt);
+		inv_radix2fft(U, half_n, 1, Ut);
+		inv_radix2fft(V, half_n, 1, Vt);
 	}
 	
 	std::complex<double> coeff(0, (-2.)*M_PI/n_d);
@@ -89,25 +89,29 @@ void inv_radix2fft(ComVector &P, size_t n, size_t num_threads, ComVector &res) {
 	}
 }
 
-std::vector<double> fft_poly_mult(double *p1, size_t n1, double *p2, size_t n2, size_t num_threads) {
+std::vector<double> fft_poly_mult(std::vector<double> &P, std::vector<double> &Q, size_t num_threads) {
+	size_t n1 = P.size();
+	size_t n2 = Q.size();
 	size_t sum = (n1+n2-1);
 	size_t total = 1;
 	while (total < sum) total = total << 1;
 	
-	std::vector<double> P(total, 0.);
-	std::vector<double> Q(total, 0.);
-	ComVector tmp(total);
-
-	for (size_t i = 0; i < n1; i++) {P[i] = p1[i];}
-	for (size_t i = 0; i < n2; i++) {Q[i] = p2[i];}
 
 	size_t half_threads1 = num_threads/2;
 	size_t half_threads2 = half_threads1 + (num_threads % 2);
 	ComVector Pt(total, 0);
 	ComVector Qt(total, 0);
-	radix2fft(P, total, half_threads1, std::ref(Pt));
-	radix2fft(Q, total, half_threads2, std::ref(Qt));
+	if (num_threads >= 2) {
+		std::thread thread(&radix2fft, std::ref(P), total, half_threads1, std::ref(Pt));
+		radix2fft(std::ref(Q), total, half_threads2, std::ref(Qt));
+		thread.join();
+	}
+	else {
+		radix2fft(std::ref(P), total, 1, std::ref(Pt));
+		radix2fft(std::ref(Q), total, 1, std::ref(Qt));
+	}
 	
+	ComVector tmp(total);
 	for (size_t j = 0; j < total; j++) 
 		tmp[j] = Pt[j] * Qt[j];
 
