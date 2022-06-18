@@ -23,8 +23,8 @@ int main(int argc, char* argv[]) {
 			auto gen = [&dist, &mersenne_engine](){
                 return dist(mersenne_engine);
             };
-			std::vector<double> p1(polysize);
-			std::vector<double> p2(polysize);
+			std::vector<double> p1(std::pow(2, polysize));
+			std::vector<double> p2(std::pow(2, polysize));
 
 			std::generate(p1.begin(), p1.end(), gen);
 			std::generate(p2.begin(), p2.end(), gen);
